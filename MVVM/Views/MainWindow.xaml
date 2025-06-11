@@ -1,0 +1,301 @@
+﻿<Window x:Class="BellePOS.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:BellePOS"
+        xmlns:vm="clr-namespace:BellePOS.MVVM.ViewModel"
+        mc:Ignorable="d"
+        Title="BellePOS" 
+        WindowState="Maximized"
+        WindowStartupLocation="CenterScreen"
+        ResizeMode="NoResize"
+        WindowStyle="None"
+        Background="Transparent"
+        AllowsTransparency="True">
+    <Window.DataContext>
+        <vm:MainViewModel />
+    </Window.DataContext>
+
+    <Border Background="#254D70" CornerRadius="10">
+        <StackPanel Orientation="Vertical" Margin="10">
+            <DockPanel LastChildFill="True" Background="#254D70" Height="30">
+                <!-- Window Title -->
+                <TextBlock Text="BellePOS" VerticalAlignment="Center" Foreground="White" Margin="10,0,0,0" FontWeight="Bold" />
+
+                <!-- Buttons on right -->
+                <StackPanel Orientation="Horizontal" HorizontalAlignment="Right" DockPanel.Dock="Right">
+                    <!-- Minimize -->
+                    <Button Width="40" Background="Transparent" Foreground="White" FontWeight="Bold" Content="―" Click="Minimize_Click" />
+                    <!-- Restore Down / Maximize -->
+                    <Button Width="40" Background="Transparent" Foreground="White" FontWeight="Bold" Content="□" Click="RestoreDown_Click" />
+                    <!-- Close -->
+                    <Button Width="40" Background="Transparent" Foreground="White" FontWeight="Bold" Content="X" Click="Close_Click" />
+                </StackPanel>
+            </DockPanel>
+            <Grid Margin="0">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="Auto"/>
+                    <!-- TextBlock column -->
+                    <ColumnDefinition Width="200"/>
+                    <!-- Input TextBox column -->
+                    <ColumnDefinition Width="*"/>
+                    <!-- Read-only TextBox column -->
+                </Grid.ColumnDefinitions>
+
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="Auto"/>
+                </Grid.RowDefinitions>
+
+                <!-- Row 0 -->
+                <TextBlock Grid.Row="0" Grid.Column="0"
+                   Foreground="White" Height="21" 
+                   HorizontalAlignment="Right" Margin="5">
+            No. Transaksi :
+                </TextBlock>
+                <TextBox Grid.Row="0" Grid.Column="1"
+                 Name="NoTransTextBox"
+                 Margin="5"
+                 Height="18"
+                 VerticalAlignment="Center"
+                 Text="Enter text here" />
+
+                <!-- Row 1 -->
+                <TextBlock Grid.Row="1" Grid.Column="0"
+                   Foreground="White" Height="21" 
+                   HorizontalAlignment="Right" Margin="5">
+            Tanggal :
+                </TextBlock>
+                <TextBox Grid.Row="1" Grid.Column="1"
+                 Name="TanggalTextBox"
+                 Margin="5"
+                 Height="18"
+                 VerticalAlignment="Center"
+                 Text="Enter text here" />
+
+                <!-- Row 2 -->
+                <TextBlock Grid.Row="2" Grid.Column="0"
+                   Foreground="White" Height="21" 
+                   HorizontalAlignment="Right" Margin="5">
+            Pelanggan :
+                </TextBlock>
+                <Grid Grid.Row="2" Grid.Column="1">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="*" />
+                        <!-- TextBox: takes remaining space -->
+                        <ColumnDefinition Width="30" />
+                        <!-- Button: fixed width -->
+                    </Grid.ColumnDefinitions>
+
+                    <TextBox Grid.Column="0"
+                         Name="CustTextBox"
+                         Margin="5"
+                         Height="18"
+                         VerticalAlignment="Center"
+                         Text="{Binding SelectedCustomerText}"
+                         IsReadOnly="True"/>
+                    <Button 
+                         Content="search" 
+                         Grid.Column="1" Height="31" VerticalAlignment="Center"
+                         Command="{Binding OpenCustomerSearchCommand}"/>
+                </Grid>
+
+                <!-- Read-only TextBox spanning all rows -->
+                <TextBox Grid.Row="0" Grid.Column="2"
+                 Grid.RowSpan="3"
+                 Name="SummaryTextBox"
+                 Margin="5"
+                 IsReadOnly="True"
+                 FontSize="60"
+                 Text="0"
+                 Padding="0,0,5,0"
+                 VerticalAlignment="Stretch"
+                 HorizontalAlignment="Stretch"
+                 TextAlignment="Right"
+                 TextWrapping="Wrap"
+                 AcceptsReturn="True"
+                 Background="#EEE" />
+            </Grid>
+            <StackPanel Orientation="Horizontal" Margin="3">
+                <TextBlock
+                    Foreground="White" 
+                    Height="21">
+                    Jumlah  :
+                </TextBlock>
+                <TextBox
+                    Width="100"
+                    Margin="2">
+                </TextBox>
+                <TextBlock
+                    Foreground="White" 
+                    Height="21">
+                    Kode Item  :
+                </TextBlock>
+                <TextBox
+                    Width="200"
+                    Margin="2">
+                </TextBox>
+                <Button Padding="5" Margin="5, 0, 5,0" Width="100" >Enter</Button>
+            </StackPanel>
+            <DataGrid AutoGenerateColumns="False" 
+          HeadersVisibility="Column"
+          CanUserAddRows="False"
+          CanUserDeleteRows="False"
+          Margin="10"
+          FontSize="14"
+          Height="300"
+          Width="Auto">
+                <DataGrid.Columns>
+                    <DataGridTextColumn Header="No." Width="40" />
+                    <DataGridTextColumn Header="Kode Item" Width="100" />
+                    <DataGridTextColumn Header="Keterangan" Width="200" />
+                    <DataGridTextColumn Header="Jumlah" Width="70" />
+                    <DataGridTextColumn Header="Satuan" Width="70" />
+                    <DataGridTextColumn Header="Harga" Width="100" />
+                    <DataGridTextColumn Header="Pot (%)" Width="70" />
+                    <DataGridTextColumn Header="Total" Width="100" />
+                </DataGrid.Columns>
+            </DataGrid>
+            <Grid>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="100"/>
+                    <ColumnDefinition Width="400"/>
+                    <ColumnDefinition Width="Auto"/>
+                    <ColumnDefinition Width="Auto"/>
+                </Grid.ColumnDefinitions>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="Auto"/>
+                </Grid.RowDefinitions>
+
+                <!-- Bottom detail section -->
+                <StackPanel Orientation="Horizontal" Grid.Column="0" Grid.Row="0" Grid.ColumnSpan="2">
+                    <Button Padding="5" Margin="5, 0, 5,0">
+                        Hapus Detail
+                    </Button>
+                    <Button Padding="5" Margin="5, 0, 5,0">
+                        Detail Item
+                    </Button>
+                    <Button Padding="5" Margin="5, 0, 5,0">
+                        Data Serial
+                    </Button>
+                    <Button Padding="5" Margin="5, 0, 5,0">
+                        Data Rakitan
+                    </Button>
+                    <Button Padding="5" Margin="5, 0, 5,0">
+                        Lihat Harga
+                    </Button>
+                </StackPanel>
+                <TextBlock Grid.Row="1" Grid.Column="0"
+                   Foreground="White" Height="21" 
+                   HorizontalAlignment="Right" Margin="5">
+                    Sales:
+                </TextBlock>
+                <TextBox Grid.Row="1" Grid.Column="1"
+                 Name="SalesTextBox"
+                 Margin="5"
+                 Height="18"
+                 VerticalAlignment="Center"
+                 Text="Enter text here" />
+
+                <TextBlock Grid.Row="2" Grid.Column="0"
+                   Foreground="White" Height="21" 
+                   HorizontalAlignment="Right" Margin="5">
+                    Keluar Dari:
+                </TextBlock>
+                <TextBox Grid.Row="2" Grid.Column="1"
+                 Name="POSGudangTextBox"
+                 Margin="5"
+                 Height="18"
+                 VerticalAlignment="Center"
+                 Text="Enter text here" />
+
+                <TextBlock Grid.Row="3" Grid.Column="0"
+                   Foreground="White" Height="21" 
+                   HorizontalAlignment="Right" Margin="5">
+                    Keterangan:
+                </TextBlock>
+                <TextBox Grid.Row="3" Grid.Column="1"
+                 Name="POSDetailBox"
+                 Margin="5"
+                 Height="18"
+                 VerticalAlignment="Center"
+                 Text="Enter text here" />
+
+                <TextBlock Grid.Row="0" Grid.Column="2"
+                   Foreground="White" Height="21" 
+                   HorizontalAlignment="Right" Margin="5">
+                    Sub Total :
+                </TextBlock>
+                <TextBox Grid.Row="0" Grid.Column="3"
+                 Name="TotalTextBox"
+                 Margin="5"
+                 Height="18"
+                 IsReadOnly="True"
+                 VerticalAlignment="Center"
+                 Text="Enter text here" />
+
+                <TextBlock Grid.Row="1" Grid.Column="2"
+                   Foreground="White" Height="21" 
+                   HorizontalAlignment="Right" Margin="5">
+                    Potongan :
+                </TextBlock>
+                <TextBox Grid.Row="1" Grid.Column="3"
+                 Name="DiscountTextBox"
+                 Margin="5"
+                 Height="18"
+                 VerticalAlignment="Center"
+                 Text="Enter text here" />
+
+                <TextBlock Grid.Row="2" Grid.Column="2"
+                   Foreground="White" Height="21" 
+                   HorizontalAlignment="Right" Margin="5">
+                   Pajak :
+                </TextBlock>
+                <TextBox Grid.Row="2" Grid.Column="3"
+                 Name="TaxTextBox"
+                 Margin="5"
+                 Height="18"
+                 IsReadOnly="True"
+                 VerticalAlignment="Center"
+                 Text="Enter text here" />
+
+                <TextBlock Grid.Row="3" Grid.Column="2"
+                   Foreground="White" Height="21" 
+                   HorizontalAlignment="Right" Margin="5">
+                    Biaya Lain :
+                </TextBlock>
+                <TextBox Grid.Row="3" Grid.Column="3"
+                 Name="AdditionalCostTextBox"
+                 Margin="5"
+                 Height="18"
+                 IsReadOnly="True"
+                 VerticalAlignment="Center"
+                 Text="Enter text here" />
+            </Grid>
+            <StackPanel Orientation="Horizontal">
+                <Button Padding="5" Margin="5, 0, 5,0">
+                    Tambah
+                </Button>
+                <Button Padding="5" Margin="5, 0, 5,0">
+                    Simpan
+                </Button>
+                <Button Padding="5" Margin="5, 0, 5,0">
+                    Batal
+                </Button>
+                <Button Padding="5" Margin="5, 0, 5,0">
+                    Cetak
+                </Button>
+                <Button Padding="5" Margin="5, 0, 5,0">
+                    Bayar [END]
+                </Button>
+            </StackPanel>
+        </StackPanel>
+
+
+    </Border>
+</Window>
